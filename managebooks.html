@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Books - Libmanager</title>
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #4271c7bb;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgb(226, 224, 224);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        .search-filter {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .search-filter input, .search-filter select {
+            padding: 10px;
+            width: 48%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .books-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .book {
+            background: rgb(206, 199, 199);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .book h3 {
+            margin: 0;
+        }
+        .book .status {
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .available {
+            color: green;
+        }
+        .borrowed {
+            color: red;
+        }
+        .book-buttons button {
+            margin: 5px;
+            padding: 8px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .edit-btn {
+            background: #007bff;
+            color: white;
+        }
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+        .change-status-btn {
+            background: #ffa500;
+            color: white;
+        }
+        .add-book-btn {
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .add-book-btn:hover {
+            background: #218838;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+        .modal input, .modal select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        .modal-buttons button {
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 48%;
+        }
+        .modal-save {
+            background: #868e97;
+            color: white;
+        }
+        .modal-close {
+            background: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📚 Manage Books</h2>
+
+    <button class="add-book-btn" onclick="openModal()">➕ Add New Book</button>
+
+    <div class="search-filter">
+        <input type="text" id="search" placeholder="🔎 Search books...">
+        <select id="filter">
+            <option value="all">All</option>
+            <option value="available">Available</option>
+            <option value="borrowed">Borrowed</option>
+        </select>
+    </div>
+
+    <div id="books-container" class="books-container"></div>
+</div>
+
+<div id="modal" class="modal">
+    <h3>Add New Book</h3>
+    <input type="text" id="book-title" placeholder="Book Title">
+    <input type="text" id="book-author" placeholder="Author">
+    <select id="count">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+    </select>
+    <input type="text" id="borrower-name" placeholder="Borrower's Name (if borrowed)" style="display: none;">
+    <div class="modal-buttons">
+        <button class="modal-save" onclick="addBook()">Save</button>
+        <button class="modal-close" onclick="closeModal()">Cancel</button>
+    </div>
+</div>
+
+<script src="managebooks.js"></script>
+
+</body>
+</html>

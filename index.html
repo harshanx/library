@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome | Library Management System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+        background-image: url('https://images.unsplash.com/photo-1512820790803-83ca734da794');
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('https://images.unsplash.com/photo-1512820790803-83ca734da794');
+  background-size: cover;         
+  background-position: center;   
+  background-repeat: no-repeat;   
+  background-attachment: fixed;   
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+    }
+
+    .container {
+      background-color: #ffff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      animation: fadeInContainer 1.5s ease-in-out forwards;
+    }
+
+    .welcome-text {
+      font-size: 2.5rem;
+      color: #2d3436;
+      border-right: 3px solid #2d3436;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+      margin: 0 auto 20px;
+      animation: typing 2.5s steps(30, end) forwards, blink 0.75s step-end infinite;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #636e72;
+      margin-top: 10px;
+      opacity: 0;
+      animation: fadeInText 2s ease forwards;
+      animation-delay: 2.5s;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 25px;
+      background-color: #0984e3;
+      color: white;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 30px;
+      opacity: 0;
+      animation: fadeInText 2s ease forwards;
+      animation-delay: 3.5s;
+    }
+
+    .btn:hover {
+      background-color: #74b9ff;
+    }
+
+    @keyframes fadeInContainer {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      from, to { border-color: transparent; }
+      50% { border-color: #2d3436; }
+    }
+
+    @keyframes fadeInText {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="welcome-text">Welcome to the Library</h1>
+    <p>Library Management System</p>
+    <a href="books.html" class="btn">Enter</a>
+  </div>
+  <script>
+    document.getElementById("user-input").addEventListener("keydown", function(event) {
+if (event.key === "Enter") {
+  event.preventDefault(); 
+  sendMessage();
+}
+});
+  </script>
+</body>
+</html>

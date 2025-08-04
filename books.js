@@ -73,26 +73,21 @@ const books = [
   }
 ];
 
-
 const bookList = document.getElementById("book-list");
 
 books.forEach(book => {
   const col = document.createElement("div");
   col.className = "col-md-4 mb-4";
   col.innerHTML = `
-   <div class="card h-100">
-   <h5 class="card-title">${book.title}</h5>
- 
-  <div class="card-body">
- <img src="${book.image}" class="card-img-top" alt="${book.title}" style=height:100vh;" object-fit: cover;">
-
-
-
-    <p class="card-text"><strong>Author:</strong> ${book.author}</p>
-    <p class="card-text"><strong>Genre:</strong> ${book.genre}</p>
-  </div>
-</div>
-
+    <div class="card h-100">
+      <img src="${book.image}" class="card-img-top" alt="${book.title}" style="height: 200px; width: 100%; object-fit: contain; padding: 10px;">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title">${book.title}</h5>
+        <p class="card-text"><strong>Author:</strong> ${book.author}</p>
+        <p class="card-text"><strong>Genre:</strong> ${book.genre}</p>
+        <a href="borrow.html" class="btn btn-primary mt-auto">Borrow</a>
+      </div>
+    </div>
   `;
   bookList.appendChild(col);
 });

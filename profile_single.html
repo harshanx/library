@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Library — User Profile</title>
+  <style>
+:root{
+  --bg: #0b0f19;
+  --card: #12182a;
+  --muted: #9aa4b2;
+  --text: #edf2ff;
+  --primary: #4f8cff;
+  --primary-press: #356fe6;
+  --ring: rgba(79,140,255,0.35);
+  --border: #22304a;
+  --success: #28c77b;
+  --danger: #ff4d4f;
+}
+
+*{ box-sizing: border-box; }
+html, body{ height: 100%; }
+body{
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--text);
+  background: radial-gradient(1200px 800px at 10% -10%, #10203c 0%, var(--bg) 60%);
+}
+
+.app-header, .app-footer{
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+}
+
+.app-footer{
+  border-top: 1px solid var(--border); border-bottom: none;
+  justify-content: center; margin-top: 24px;
+}
+
+.app-header h1{ font-size: 1.2rem; margin: 0; }
+.app-header nav{ display: flex; gap: 12px; align-items: center; }
+.link{ color: var(--muted); text-decoration: none; }
+.link:hover{ color: var(--text); }
+
+.container{
+  max-width: 1000px; margin: 24px auto; padding: 0 16px;
+  display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 16px;
+}
+@media (max-width: 900px){ .container{ grid-template-columns: 1fr; } }
+
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.profile-card{ display: grid; grid-template-columns: 160px 1fr; gap: 16px; }
+@media (max-width: 700px){ .profile-card{ grid-template-columns: 1fr; } }
+
+.avatar-wrap{ position: relative; display: flex; justify-content: center; }
+.avatar{
+  width: 140px; height: 140px; border-radius: 50%;
+  border: 2px solid var(--border); object-fit: cover; background: #0d1220;
+}
+.avatar-label{ position: relative; cursor: pointer; display: inline-block; }
+.avatar-edit-badge{
+  position: absolute; right: 6px; bottom: 6px;
+  background: var(--primary); color: white; font-size: 12px;
+  padding: 6px 8px; border-radius: 999px; border: 2px solid #0d1220;
+  transform: translate(10%, 10%);
+}
+
+.profile-fields{ width: 100%; }
+.grid{
+  display: grid; gap: 12px;
+  grid-template-columns: 1fr 1fr; 
+}
+.grid .span-2{ grid-column: span 2; }
+@media (max-width: 700px){ .grid{ grid-template-columns: 1fr; } .grid .span-2{ grid-column: span 1; } }
+
+.field{ display: grid; gap: 6px; }
+label{ color: var(--muted); font-size: 0.9rem; }
+input, select, textarea{
+  background: #0c1324; color: var(--text); border: 1px solid var(--border);
+  padding: 10px 12px; border-radius: 10px; outline: none;
+}
+input:focus, select:focus, textarea:focus{ border-color: var(--primary); box-shadow: 0 0 0 4px var(--ring); }
+.hint{ color: var(--muted); margin: 0; font-size: 0.8rem; }
+
+.actions{ display: flex; gap: 10px; margin-top: 12px; }
+
+.btn{
+  border: 1px solid var(--border); background: #0f1730; color: var(--text);
+  padding: 10px 14px; border-radius: 10px; cursor: pointer;
+}
+.btn:hover{ filter: brightness(1.05); }
+.btn:disabled{ opacity: 0.6; cursor: not-allowed; }
+.btn-primary{ background: var(--primary); border-color: var(--primary-press); }
+.btn-primary:active{ background: var(--primary-press); }
+.btn-ghost{ background: transparent; }
+
+.meta-card h2{ margin-top: 0; }
+.meta{ list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 8px; }
+.meta li{ display: flex; justify-content: space-between; padding: 10px 12px; background: #0c1324; border: 1px solid var(--border); border-radius: 10px; }
+.meta li span{ color: var(--muted); }
+
+.toast{
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+  background: #111a30; color: white; border: 1px solid var(--border);
+  padding: 12px 16px; border-radius: 10px; opacity: 0; pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+.toast.show{ opacity: 1; transform: translateX(-50%) translateY(-6px); }
+.toast.success{ border-color: rgba(40,199,123,0.5); }
+.toast.error{ border-color: rgba(255,77,79,0.5); }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <h1>📚 Library — User Profile</h1>
+    <nav>
+      <a href="#" class="link">Home</a>
+      <a href="#" class="link">Search Books</a>
+      <a href="#" class="link">Borrow</a>
+      <a href="#" class="link">Return</a>
+      <button id="logoutBtn" class="btn btn-ghost">Logout</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card profile-card">
+      <div class="avatar-wrap">
+        <label for="avatarInput" class="avatar-label" title="Click to change photo">
+          <img id="avatarImg" class="avatar" alt="User avatar" src="" />
+          <input type="file" id="avatarInput" accept="image/*" hidden />
+          <div class="avatar-edit-badge">✎</div>
+        </label>
+      </div>
+
+      <div class="profile-fields">
+        <form id="profileForm" novalidate>
+          <div class="grid">
+            <div class="field">
+              <label for="fullName">Full Name</label>
+              <input id="fullName" name="fullName" type="text" required placeholder="e.g., Harshan P V" />
+              <p class="hint">Required</p>
+            </div>
+
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" required placeholder="name@example.com" />
+              <p class="hint">Use your college email if possible.</p>
+            </div>
+
+            <div class="field">
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" type="tel" required placeholder="+91-XXXXXXXXXX" />
+              <p class="hint">10 digits (India)</p>
+            </div>
+
+            <div class="field">
+              <label for="rollNo">University Reg / Roll No</label>
+              <input id="rollNo" name="rollNo" type="text" placeholder="e.g., PKD23CS023" />
+            </div>
+
+            <div class="field">
+              <label for="dept">Department</label>
+              <select id="dept" name="dept">
+                <option value="">Select…</option>
+                <option>CSE</option>
+                <option>ECE</option>
+                <option>EEE</option>
+                <option>ME</option>
+                <option>CE</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="field span-2">
+              <label for="address">Address</label>
+              <textarea id="address" name="address" rows="3" placeholder="House, Street, City, PIN"></textarea>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="button" id="editBtn" class="btn">Edit</button>
+            <button type="submit" id="saveBtn" class="btn btn-primary" disabled>Save</button>
+            <button type="button" id="cancelBtn" class="btn btn-ghost" disabled>Cancel</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="card meta-card">
+      <h2>Account Info</h2>
+      <ul class="meta">
+        <li><span>Member ID</span><strong id="memberId">—</strong></li>
+        <li><span>Created</span><strong id="createdAt">—</strong></li>
+        <li><span>Last Updated</span><strong id="updatedAt">—</strong></li>
+      </ul>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <footer class="app-footer">
+    <small>© <span id="year"></span> Simple Library Management — User Section</small>
+  </footer>
+
+  <script>
+// === Profile Page JS ===
+const USE_LOCAL = true;
+const $ = (q) => document.querySelector(q);
+function toast(msg, type = 'success') {
+  const el = $('#toast');
+  el.textContent = msg;
+  el.className = \`toast show \${type}\`;
+  setTimeout(() => { el.classList.remove('show'); }, 1800);
+}
+function formatDate(ts){ if(!ts) return '—'; return new Date(ts).toLocaleString(); }
+const STORAGE_KEY = 'lib_user_profile';
+const LocalService = {
+  async getMe(){
+    const str = localStorage.getItem(STORAGE_KEY);
+    if(!str){
+      const seed = { id: crypto.randomUUID(), fullName:'Your Name', email:'you@example.com', phone:'', dept:'', rollNo:'', address:'', avatarDataUrl:'', createdAt: Date.now(), updatedAt: Date.now() };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(seed)); return seed;
+    }
+    return JSON.parse(str);
+  },
+  async updateMe(patch){ const cur = await this.getMe(); const next={...cur,...patch,updatedAt:Date.now()}; localStorage.setItem(STORAGE_KEY,JSON.stringify(next)); return next; },
+  async logout(){ return true; }
+};
+const svc = LocalService;
+const state = { initial:null, editing:false };
+function setFormDisabled(dis){ ['fullName','email','phone','rollNo','dept','address','avatarInput','saveBtn','cancelBtn'].forEach(id=>{ $('#'+id).disabled = dis; }); }
+function setMode(editing){ state.editing=editing; $('#editBtn').disabled=editing; $('#saveBtn').disabled=!editing; $('#cancelBtn').disabled=!editing; setFormDisabled(!editing); }
+function fillForm(d){ $('#fullName').value=d.fullName||''; $('#email').value=d.email||''; $('#phone').value=d.phone||''; $('#rollNo').value=d.rollNo||''; $('#dept').value=d.dept||''; $('#address').value=d.address||''; $('#avatarImg').src=d.avatarDataUrl||'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140"><rect width="100%" height="100%" fill="#0d1220"/><text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#9aa4b2" font-size="14" font-family="system-ui">No Photo</text></svg>'); $('#memberId').textContent=d.id||'—'; $('#createdAt').textContent=formatDate(d.createdAt); $('#updatedAt').textContent=formatDate(d.updatedAt); }
+function readForm(){ return { fullName:$('#fullName').value.trim(), email:$('#email').value.trim(), phone:$('#phone').value.trim(), rollNo:$('#rollNo').value.trim(), dept:$('#dept').value, address:$('#address').value.trim() }; }
+function validate(data){ const errors=[]; if(!data.fullName) errors.push('Full Name is required'); if(!data.email||!/^\S+@\S+\.\S+$/.test(data.email)) errors.push('Valid email required'); if(data.phone && !/^\d{10}$/.test(data.phone)) errors.push('Phone must be 10 digits'); return errors; }
+function toDataUrl(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }); }
+async function init(){ try{ const profile=await svc.getMe(); state.initial=profile; fillForm(profile); setMode(false);}catch(e){toast('Could not load profile','error');}
+  $('#year').textContent=new Date().getFullYear();
+  $('#editBtn').addEventListener('click',()=>{ setMode(true); state.initial={...state.initial}; });
+  $('#cancelBtn').addEventListener('click',()=>{ fillForm(state.initial); setMode(false); toast('Changes discarded'); });
+  $('#profileForm').addEventListener('submit',async ev=>{ ev.preventDefault(); const patch=readForm(); const errs=validate(patch); if(errs.length){toast(errs[0],'error');return;} try{ const next=await svc.updateMe(patch); state.initial=next; fillForm(next); setMode(false); toast('Profile updated ✅'); }catch(e){toast('Save failed','error');} });
+  $('#avatarInput').addEventListener('change',async ev=>{ const f=ev.target.files?.[0]; if(!f) return; if(!f.type.startsWith('image/')){toast('Please select an image','error');return;} if(f.size>1024*1024){toast('Image too large (max 1MB)','error');return;} try{ const dataUrl=await toDataUrl(f); $('#avatarImg').src=dataUrl; if(state.editing){ } else { const next=await svc.updateMe({avatarDataUrl:dataUrl}); state.initial=next; fillForm(next); toast('Photo updated ✅'); } }catch(e){toast('Could not update photo','error');} });
+  $('#logoutBtn').addEventListener('click',async()=>{ await svc.logout(); toast('Logged out'); });
+}
+document.addEventListener('DOMContentLoaded',init);
+  </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications & History</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      padding: 2rem;
+      color: #333;
+    }
+    h2 {
+      color: #222;
+    }
+    .notification {
+      background: #fff3cd;
+      border: 1px solid #ffeeba;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+    }
+    .history-list {
+      list-style: none;
+      padding: 0;
+    }
+    .history-list li {
+      background: #e9ecef;
+      padding: 0.8rem;
+      margin-bottom: 0.5rem;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📢 Notifications & History</h2>
+
+  =
+  <div id="notifications"></div>
+
+  
+  <h3>Borrowed Books History</h3>
+  <ul class="history-list" id="historyList"></ul>
+
+  <script>
+    
+    let borrowedHistory = [
+      { book: "Harry Potter", borrowedOn: "2025-08-01", due: "2025-09-01", returned: true },
+      { book: "The Hobbit", borrowedOn: "2025-08-15", due: "2025-09-05", returned: false },
+      { book: "1984", borrowedOn: "2025-08-20", due: "2025-09-10", returned: false }
+    ];
+
+    function loadNotificationsAndHistory() {
+      const notificationsDiv = document.getElementById("notifications");
+      const historyList = document.getElementById("historyList");
+      notificationsDiv.innerHTML = "";
+      historyList.innerHTML = "";
+
+      const today = new Date();
+
+      borrowedHistory.forEach(record => {
+        
+        const li = document.createElement("li");
+        li.textContent = `${record.book} (Borrowed on: ${record.borrowedOn}, Due: ${record.due}) - ${record.returned ? "✅ Returned" : "📖 Not Returned"}`;
+        historyList.appendChild(li);
+
+        
+        const dueDate = new Date(record.due);
+        if (!record.returned) {
+          let daysLeft = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+          if (daysLeft <= 3 && daysLeft >= 0) {
+            let div = document.createElement("div");
+            div.className = "notification";
+            div.textContent = `Reminder: "${record.book}" is due in ${daysLeft} day(s)!`;
+            notificationsDiv.appendChild(div);
+          } else if (daysLeft < 0) {
+            let div = document.createElement("div");
+            div.className = "notification";
+            div.textContent = `Overdue: "${record.book}" was due on ${record.due}. Please return it!`;
+            notificationsDiv.appendChild(div);
+          }
+        }
+      });
+    }
+
+    loadNotificationsAndHistory();
+  </script>
+</body>
+</html>

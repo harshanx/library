@@ -31,12 +31,12 @@ function addBook() {
         return;
     }
 
-    // If editing, update existing book
+    
     if (editingIndex !== null) {
         books[editingIndex] = { id, title, author, cover, edition, copies };
         editingIndex = null; // reset
     } else {
-        // prevent duplicate IDs when adding new
+       
         if (books.some(book => book.id === id)) {
             alert("Book ID must be unique.");
             return;
@@ -50,9 +50,9 @@ function addBook() {
             cover, 
             edition, 
             copies,
-            status: "available",   // ✅ default
-            borrower: null,        // ✅ default
-            dueDate: null          // ✅ default
+            status: "available",   
+            borrower: null,        
+            dueDate: null         
         };
 
         books.push(newBook);
@@ -100,12 +100,12 @@ function displayBooks() {
         booksTableBody.appendChild(row);
     });
 }
-let editingIndex = null; // track which book is being edited
+let editingIndex = null; 
 
 function editBook(index) {
     const book = books[index];
 
-    // Pre-fill modal with book data
+    
     document.getElementById("book-id").value = book.id;
     document.getElementById("book-title").value = book.title;
     document.getElementById("book-author").value = book.author;
@@ -113,11 +113,11 @@ function editBook(index) {
     document.getElementById("book-copies").value = book.copies;
     document.getElementById("book-cover").value = book.cover;
 
-    // Remove old entry temporarily
+    
     books.splice(index, 1);
     localStorage.setItem("books", JSON.stringify(books));
 
-    openModal(); // Reuse your modal
+    openModal(); 
 }
 
 function deleteBook(index) {
@@ -154,23 +154,24 @@ function toggleAvailability(index) {
 }
 
 
-// Initial render
+
 displayBooks();
 
-// Enable Enter key navigation between inputs in modal
+
 const inputs = document.querySelectorAll('.modal-content input');
 
 inputs.forEach((input, index) => {
   input.addEventListener('keydown', (e) => {
     if (e.key === "Enter") {
-      e.preventDefault(); // prevent accidental form submit
+      e.preventDefault();
       const nextInput = inputs[index + 1];
       if (nextInput) {
-        nextInput.focus(); // move to next input
+        nextInput.focus(); 
       } else {
-        // If last input, trigger Save button
+       
         document.querySelector('.modal-content .add-btn').click();
       }
     }
   });
 });
+
